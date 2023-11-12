@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Web_API.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,18 +10,20 @@ namespace Web_API.Controllers
     [ApiController]
     public class SalaryController : ControllerBase
     {
-        // GET: api/<SalaryController>
+        private static List<Salary> events = new List<Salary> { new Salary{basesalary=1000,bouns=50,dailysalary=80} };
+            // GET: api/<SalaryController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Salary> Get()
         {
-            return new string[] { "value1", "value2" };
+            return events;
         }
 
         // GET api/<SalaryController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Salary Get(int id)
         {
-            return "value";
+            var evevt = events.Find(e => e.Id == id);
+            return Salary;
         }
 
         // POST api/<SalaryController>
