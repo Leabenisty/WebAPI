@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Web_API.Entities;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Web_API.Controllers
 {
@@ -8,36 +8,64 @@ namespace Web_API.Controllers
     [ApiController]
     public class WorkhoursController : ControllerBase
     {
+        private readonly DataContaxt _dataContaxt;
+        public WorkhoursController(DataContaxt contaxt)
+        {
+            _dataContaxt = contaxt;
+        }
+
+
         // GET: api/<WorkhoursController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Workhours> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _dataContaxt.EventListW;
         }
+
 
         // GET api/<WorkhoursController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Workhours> Get(int id)
         {
-            return "value";
+           Workhours w= _dataContaxt.EventListW.Find(e => e.Id == id);
+            if (w is null)
+                    return NotFound();
+            return w;
+           
         }
 
-        // POST api/<WorkhoursController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //// POST api/<WorkhoursController>
+        //[HttpPost]
+        //public void Post([FromBody] Workhours work)
+        //{
+        //    _dataContaxt.EventListW.Add(new Workhours
+        //    {
+        //        Id = work.Id,
+        //        Day = work.Day,
+        //        Month = work.Month,
+        //        Year = work.Year,
+        //        HoursDay = work.HoursDay,
+            
+        //    });
+        //}
 
         // PUT api/<WorkhoursController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Workhours work)
         {
+            Workhours w = _dataContaxt.EventListW.Find(e => e.Id == id);
+            if (w is null)
+                return NotFound();
+            if (w == null)
+                return BadRequest();
+            w.Id = work.Id;
+            w.Day = work.Day;
+            w.Month = work.Month;
+            w.Year = work.Year;
+            w.HoursDay = work.HoursDay;   
+            return NoContent();
         }
 
-        // DELETE api/<WorkhoursController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+       
     }
 }

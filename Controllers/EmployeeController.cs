@@ -11,48 +11,63 @@ namespace Web_API.Controllers
     public class EmployeeController : ControllerBase
     {
         private static int id = 0;
-        private static List<Employee> events = new List<Employee> { new Employee{id=0,firstname="lea" ,lastname="benisty",age=20} };
+        private readonly DataContaxt _dataContaxt;
+        public EmployeeController(DataContaxt contaxt)
+        {
+            _dataContaxt = contaxt;
+        }
+
         // GET: api/<EmployeeController>
         [HttpGet]
         public IEnumerable<Employee> Get()
         {
-            return events;
+            return _dataContaxt.EventListE;
         }
 
         // GET api/<EmployeeController>/5
         [HttpGet("{id}")]
-        public Employee Get(int id)
+        public ActionResult<Employee> Get(int id)
         {
-            var evevt = events.Find(e => e.Id == id);
-            return evevt;
+            Employee e = _dataContaxt.EventListE.Find(e => e.Id == id);
+            if (e is null)
+                return NotFound();
+            return e;
         }
 
         // POST api/<EmployeeController>
         [HttpPost]
         public void Post([FromBody] Employee employee)
         {
-            events.Add(new Employee { Id = ++id, firstname = employee.firstname, Lastname = employee.Lastname, age = employee.age });
+            _dataContaxt.EventListE.Add(new Employee { Id = ++id, firstname = employee.firstname, Lastname = employee.Lastname, age = employee.age });
         }
 
         // PUT api/<EmployeeController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Employee employee)
+        public ActionResult Put(int id, [FromBody]Employee employee)
         {
-            var evevt = events.Find(e => e.Id == id);
-            if(evevt!=null)
-            { evevt.firstname = employee.firstname;
-                evevt.lastname = employee.lastname;
-                evevt.age = employee.age;
+            Employee e = _dataContaxt.EventListE.Find(e => e.Id == id);
+            if (e is null)
+                return NotFound();
+            if (e == null)
+                return BadRequest();
+            { 
+                e.firstname = employee.firstname;
+                e.lastname = employee.lastname;
+                e.age = employee.age;
+                return NoContent();
             }
-            ;
+            
         }
 
         // DELETE api/<EmployeeController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            var eve = events.Find(e => e.Id == id);
-            events.Remove(eve);
+           Employee e = _dataContaxt.EventListE.Find(e => e.Id == id);
+            if (e == null)
+                return NotFound();
+            _dataContaxt.EventListE.Remove(e);
+            return NoContent();
         }
     }
 }

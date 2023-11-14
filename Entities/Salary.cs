@@ -2,23 +2,22 @@
 {
     public class Salary
     {
-      public double basesalary;
-      public  double bouns;
-      public  double dailysalary;
-       
-        public double Basesalary { get => basesalary; set => basesalary = value; }
-        public double Bouns { get => bouns; set => bouns = value; }
-        public double Dailysalary { get => dailysalary; set => dailysalary = value; }
+        public int Id { get; set; }
+        public int Idemployee { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
 
-        //public Salary(double basesalary,double bouns)
-        //{
-        //    this.basesalary = basesalary;
-        //    this.bouns = bouns;
-        //}
-        //public Salary(double dailysalary)
-        //{
-        //    this.dailysalary = dailysalary;
-        //    this.bouns=50;
+        public double Basesalary { get; set; }
+      public  double Bouns { get; set; }
+
+      public  double Finalesalary { get; set; }
+        public bool Paidup { get ; set  ; }
+
+      
+
+        //מזהה רשומה ומזהה עובד
+        //חודש ושנה
+        //סכום כמה שעות חודשית ובונוס 
         //}
     }
 }

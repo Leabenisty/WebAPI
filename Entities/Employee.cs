@@ -4,8 +4,8 @@
     { 
        public int id;           
        public string firstname;
-      public  string lastname;
-      public  int age; 
+       public  string lastname;
+       public  int age; 
         public string Firstname { get => firstname; set => firstname = value; }
         public string Lastname { get => lastname; set => lastname = value; }
         public int Age { get => age; set => age = value; }

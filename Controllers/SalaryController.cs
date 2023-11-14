@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using Web_API.Entities;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Web_API.Controllers
 {
@@ -10,38 +9,80 @@ namespace Web_API.Controllers
     [ApiController]
     public class SalaryController : ControllerBase
     {
-        private static List<Salary> events = new List<Salary> { new Salary{basesalary=1000,bouns=50,dailysalary=80} };
-            // GET: api/<SalaryController>
+
+       
+        private readonly DataContaxt _dataContaxt;
+        public SalaryController(DataContaxt contaxt)
+        {
+            _dataContaxt = contaxt;
+        }
+        // GET: api/<SalaryController>
         [HttpGet]
         public IEnumerable<Salary> Get()
         {
-            return events;
+            return _dataContaxt.EventListS;
         }
 
         // GET api/<SalaryController>/5
         [HttpGet("{id}")]
-        public Salary Get(int id)
+        public ActionResult<Salary>  Get(int id)
         {
-            var evevt = events.Find(e => e.Id == id);
-            return Salary;
+           Salary sal = _dataContaxt.EventListS.Find(e => e.Id == id);
+            if (sal is null)
+                return NotFound();
+            return sal;     
         }
 
-        // POST api/<SalaryController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //// POST api/<SalaryController>
+        //[HttpPost]
+        //public void Post([FromBody] Salary sal)
+        //{
+        //    _dataContaxt.EventListS.Add(new Salary { 
+        //       Id=sal.Id,
+        //        Month=sal.Month,
+        //        Year=sal.Year,
+        //        Basesalary=sal.Basesalary,
+        //        Bouns=sal.Bouns,
+        //        Finalesalary=sal.Finalesalary,
+        //        Paidup=sal.Paidup,
+                
+        //        });
+        //}
 
         // PUT api/<SalaryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Salary sal)
         {
-        }
+            Salary s= _dataContaxt.EventListS.Find(e => e.Id == id);
+            if (s is null)
+                return NotFound();
+            if(s==null)
+                return BadRequest();
+            s.Id = sal.Id;
+            s.Month = sal.Month;
+            s.Year = sal.Year;
+            s.Basesalary = sal.Basesalary;
+            s.Bouns = sal.Bouns;
+            s.Finalesalary = sal.Finalesalary;
+            s.Paidup = sal.Paidup;
+            return NoContent();
 
-        // DELETE api/<SalaryController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
+        public ActionResult status(int id)
+        {
+            Salary s = _dataContaxt.EventListS.Find(e => e.Id == id);
+            if (s is null)
+                return NotFound();
+            if (s == null)
+                return BadRequest();
+            if (s.Paidup == true)
+                s.Paidup = false;
+            else
+                s.Paidup = true;
+            return NoContent();
+            //לעדכן אם שולם או לא לפי מזהה
+        }
+    
+
     }
 }
